@@ -1,58 +1,127 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 💒 My Wedding Planner
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Aplikasi web perencanaan pernikahan DIY — checklist, budget, vendor, catatan dalam satu platform terpusat.
 
-## About Laravel
+![Laravel](https://img.shields.io/badge/Laravel-13-red?logo=laravel)
+![React](https://img.shields.io/badge/React-19-blue?logo=react)
+![Inertia](https://img.shields.io/badge/Inertia-2-purple)
+![Tailwind](https://img.shields.io/badge/Tailwind-v4-06b6d4?logo=tailwindcss)
+![Docker](https://img.shields.io/badge/Docker-Sail-2496ed?logo=docker)
+![PHP](https://img.shields.io/badge/PHP-8.5-777bb4?logo=php)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## ✨ Fitur
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 👤 User
+| Fitur | Deskripsi |
+|-------|-----------|
+| **Dashboard** | Countdown pernikahan, pie chart budget, progress checklist, deadline terdekat |
+| **Vendor List** | Katalog **140 vendor** (7 kategori), sort by harga, filter kategori, Add to Budget |
+| **Budget Tracker** | CRUD transaksi, progress bar spent/planned/sisa, Add to Checklist + sub-task |
+| **Checklist** | Task utama + **sub-task** expandable, toggle status, filter & search |
+| **Catatan** | Card view, upload gambar inspirasi |
+| **Pesan** | Chat real-time dengan admin |
+| **Laporan** | Ringkasan + Export PDF |
 
-## Learning Laravel
+### 🛡️ Admin
+| Fitur | Deskripsi |
+|-------|-----------|
+| **Dashboard Admin** | Overview user, search & filter, countdown per user |
+| **Kelola Plan** | Manage task, budget, notes per user + chat |
+| **Chat Support** | Lihat & balas chat semua user |
+| **Kelola Vendor** | CRUD vendor katalog global |
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+---
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 🛠️ Tech Stack
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+| Layer | Teknologi |
+|-------|-----------|
+| Backend | Laravel 13, PHP 8.5 |
+| Frontend | React 19, Inertia 2, Tailwind CSS v4 |
+| Database | MySQL 8.4 |
+| Auth | Laravel Breeze (Inertia + React) |
+| Charts | Chart.js + react-chartjs-2 |
+| PDF | barryvdh/laravel-dompdf |
+| Dev Env | Docker / Laravel Sail |
 
-## Agentic Development
+---
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+## 🚀 Cara Menjalankan
 
+### Prasyarat
+- **Docker Desktop** (dengan WSL2 untuk Windows)
+
+### Setup
 ```bash
-composer require laravel/boost --dev
+# Clone
+git clone git@github.com:ianai-labs/diy-wedding-planner.git
+cd diy-wedding-planner
 
-php artisan boost:install
+# Jalankan
+docker compose up -d
+docker compose exec laravel.test composer install
+docker compose exec laravel.test npm install && npm run build
+docker compose exec laravel.test php artisan migrate --seed
+docker compose exec laravel.test php artisan storage:link
+
+# Buka http://localhost
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+### Login Demo
+| Role | Email | Password |
+|------|-------|----------|
+| User | `user1@demo.com` | `password` |
+| Admin | `admin@demo.com` | `password` |
 
-## Contributing
+> 20 user demo tersedia: `user1@demo.com` s/d `user20@demo.com`
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+---
 
-## Code of Conduct
+## 📁 Struktur Proyek
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```
+app/
+├── Http/Controllers/    # Logic backend
+├── Models/              # Database model (User, Task, Budget, Vendor, Note, Message)
+└── Requests/            # Form validation
+resources/js/Pages/      # Halaman React + Inertia
+routes/web.php           # Semua route
+database/migrations/     # Skema database
+```
 
-## Security Vulnerabilities
+> Baca `penjelasan.md` untuk dokumentasi lengkap setiap file.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+---
 
-## License
+## 🗄️ Database
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+| Tabel | Fungsi |
+|-------|--------|
+| `users` | Akun user & admin |
+| `tasks` | Checklist + sub-task (`parent_id`) |
+| `budgets` | Transaksi anggaran |
+| `vendors` | Katalog vendor global |
+| `notes` | Catatan inspirasi |
+| `messages` | Chat admin-user |
+
+---
+
+## 🏗️ Arsitektur
+
+```
+Browser → Inertia Router → Laravel Controller → Model → MySQL
+                ↕
+         React Pages (JSX)
+```
+
+- **Controller**: Setiap modul punya Resource Controller (index, create, store, edit, update, destroy)
+- **Middleware**: `auth` (semua user), `admin` (hanya role admin)
+- **Inertia**: Jembatan Laravel ↔ React tanpa API
+
+---
+
+## ⚖️ License
+
+MIT — dibuat untuk tugas mata kuliah Pemrograman Web.
