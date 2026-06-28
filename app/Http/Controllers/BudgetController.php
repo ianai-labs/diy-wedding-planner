@@ -6,7 +6,6 @@ use App\Http\Requests\BudgetRequest;
 use App\Models\Budget;
 use App\Models\Task;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
@@ -76,17 +75,11 @@ class BudgetController extends Controller
         return Inertia::render('Budgets/Edit', ['budget' => $budget]);
     }
 
-    public function update(Request $request, Budget $budget): RedirectResponse
+    public function update(BudgetRequest $request, Budget $budget): RedirectResponse
     {
         abort_if($budget->user_id !== auth()->id(), 403);
 
-        $validated = $request->validate([
-            'description' => 'required|string|max:255',
-            'amount'      => 'required|numeric|min:1',
-            'date'        => 'required|date',
-            'status'      => 'required|in:planned,spent',
-        ]);
-
+        $validated = $request->validated();
         $budget->update($validated);
 
         return redirect()->route('budgets.index')->with('success', 'Budget berhasil diperbarui.');
@@ -154,7 +147,7 @@ class BudgetController extends Controller
         };
     }
 
-    public function addToTask(HttpRequest $request, Budget $budget): RedirectResponse
+    public function addToTask(Request $request, Budget $budget): RedirectResponse
     {
         abort_if($budget->user_id !== auth()->id(), 403);
 

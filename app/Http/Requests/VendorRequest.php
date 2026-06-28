@@ -16,6 +16,7 @@ class VendorRequest extends FormRequest
         return [
             'name'     => 'required|string|max:200',
             'category' => 'required|in:photography,decoration,catering,mua,mc,venue,others',
+            'price'    => 'required|numeric|min:0',
             'contact'  => 'required|string|max:50',
             'address'  => 'nullable|string',
             'notes'    => 'nullable|string',

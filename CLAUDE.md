@@ -14,13 +14,14 @@ Aplikasi web **My Wedding Planner** — platform terpusat untuk pasangan merenca
 ## Tech Stack
 
 ```
-Environment : Docker / Laravel Sail (PHP 8.4, Node.js, MySQL dalam container)
-Backend     : Laravel 12, PHP 8.2+
-Database    : MySQL 8.4
-Frontend    : Inertia 2 + React 19, TypeScript, Tailwind CSS v4, shadcn/ui, Alpine.js
-Auth        : Laravel Starter Kit: Inertia + React (session-based)
-Export      : maatwebsite/excel, barryvdh/laravel-dompdf
+Environment : Docker / Laravel Sail (PHP 8.5, Node.js, MySQL dalam container)
+Backend     : Laravel 13, PHP 8.3+
+Database    : MySQL 8.4 (production) / SQLite (development)
+Frontend    : Inertia 2 + React 19, TypeScript, Tailwind CSS v3, shadcn/ui
+Auth        : Session (Laravel Breeze) + Token (Laravel Sanctum) — coexist
+Export      : barryvdh/laravel-dompdf (PDF) + PHP fputcsv (CSV)
 Charts      : Chart.js + react-chartjs-2 (via npm)
+API         : REST endpoints (routes/api.php) dengan auth:sanctum
 ```
 
 ---
@@ -218,7 +219,7 @@ storage/app/public/
 'status'   => ['planned', 'spent']
 
 // Vendor
-'category' => ['photography', 'decoration', 'catering', 'mua', 'mc', 'others']
+'category' => ['photography', 'decoration', 'catering', 'mua', 'mc', 'venue', 'others']
 
 // User
 'role'     => ['user', 'admin']
