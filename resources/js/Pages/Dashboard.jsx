@@ -58,7 +58,7 @@ export default function Dashboard({
                             <form onSubmit={(e) => { e.preventDefault(); patch(route('profile.budget'), { onSuccess: () => setEditingBudget(false) }); }}
                                 className="flex items-center gap-2 mt-1">
                                 <input type="number" value={data.total_budget} onChange={e => setData('total_budget', e.target.value)}
-                                    className="w-40 rounded-md border-gray-300 text-lg font-bold" min="0" autoFocus disabled={processing} />
+                                    className="w-40 rounded-md border-gray-300 text-lg font-bold" min="0" step="500000" autoFocus disabled={processing} />
                                 <button type="submit" disabled={processing} className="rounded-md bg-indigo-600 px-3 py-1 text-sm text-white hover:bg-indigo-500">Simpan</button>
                                 <button type="button" onClick={() => { setEditingBudget(false); setData('total_budget', totalBudget || 0); }}
                                     className="rounded-md bg-gray-200 px-3 py-1 text-sm text-gray-600 hover:bg-gray-300">Batal</button>
