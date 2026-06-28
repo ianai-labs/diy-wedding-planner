@@ -50,7 +50,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
     Route::get('/reports/export-pdf', [ReportController::class, 'exportPdf'])->name('reports.export-pdf');
-    // CSV export removed — users don't need CSV format
+    Route::get('/reports/export-csv', [ReportController::class, 'exportExcel'])->name('reports.export-csv');
 
     // Admin routes
     Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
