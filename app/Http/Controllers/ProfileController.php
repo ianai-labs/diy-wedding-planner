@@ -41,6 +41,20 @@ class ProfileController extends Controller
     }
 
     /**
+     * Update the user's total budget.
+     */
+    public function updateBudget(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'total_budget' => ['required', 'numeric', 'min:0'],
+        ]);
+
+        $request->user()->update($validated);
+
+        return Redirect::back()->with('success', 'Total budget berhasil diperbarui.');
+    }
+
+    /**
      * Delete the user's account.
      */
     public function destroy(Request $request): RedirectResponse

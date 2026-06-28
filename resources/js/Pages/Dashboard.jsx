@@ -1,8 +1,9 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head } from '@inertiajs/react';
+import { Head, useForm } from '@inertiajs/react';
 import { Pie, Doughnut } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { formatDate, formatRp } from '@/utils/format';
+import { useState } from 'react';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -14,6 +15,10 @@ export default function Dashboard({
     totalTasks, completedTasks, pendingTasks, progressTasks, taskProgress,
     daysLeft, upcomingTasks, budgetByCategory, taskByStatus,
 }) {
+    const [editingBudget, setEditingBudget] = useState(false);
+    const { data, setData, patch, processing } = useForm({
+        total_budget: totalBudget || 0,
+    });
     const pieData = {
         labels: Object.keys(budgetByCategory).map((k) => categoryLabels[k] || k),
         datasets: [{
@@ -49,7 +54,22 @@ export default function Dashboard({
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                     <div className="rounded-lg bg-white p-6 shadow">
                         <p className="text-sm text-gray-500">Total Budget</p>
-                        <p className="text-2xl font-bold text-gray-800">Rp {formatRp(totalBudget)}</p>
+                        {editingBudget ? (
+                            <form onSubmit={(e) => { e.preventDefault(); patch(route('profile.budget'), { onSuccess: () => setEditingBudget(false) }); }}
+                                className="flex items-center gap-2 mt-1">
+                                <input type="number" value={data.total_budget} onChange={e => setData('total_budget', e.target.value)}
+                                    className="w-40 rounded-md border-gray-300 text-lg font-bold" min="0" autoFocus disabled={processing} />
+                                <button type="submit" disabled={processing} className="rounded-md bg-indigo-600 px-3 py-1 text-sm text-white hover:bg-indigo-500">Simpan</button>
+                                <button type="button" onClick={() => { setEditingBudget(false); setData('total_budget', totalBudget || 0); }}
+                                    className="rounded-md bg-gray-200 px-3 py-1 text-sm text-gray-600 hover:bg-gray-300">Batal</button>
+                            </form>
+                        ) : (
+                            <div className="flex items-center gap-2">
+                                <p className="text-2xl font-bold text-gray-800">Rp {formatRp(totalBudget)}</p>
+                                <button onClick={() => { setEditingBudget(true); setData('total_budget', totalBudget || 0); }}
+                                    className="text-sm text-indigo-600 hover:underline">Edit</button>
+                            </div>
+                        )}
                     </div>
                     <div className="rounded-lg bg-white p-6 shadow">
                         <p className="text-sm text-gray-500">Terpakai</p>
