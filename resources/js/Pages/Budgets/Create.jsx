@@ -2,7 +2,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
 
 const categories = ['venue', 'catering', 'decoration', 'photo_video', 'dress', 'ring', 'others'];
-const catLabels = { venue: 'Venue', catering: 'Catering', decoration: 'Dekorasi', photo_video: 'Foto/Video', dress: 'Busana', ring: 'Cincin', venue: 'Venue', others: 'Lainnya' };
+const catLabels = { venue: 'Venue', catering: 'Catering', decoration: 'Dekorasi', photo_video: 'Foto/Video', dress: 'Busana', ring: 'Cincin', others: 'Lainnya' };
 
 export default function BudgetsCreate() {
     const { data, setData, post, processing, errors } = useForm({ category: 'venue', description: '', amount: '', date: '', status: 'planned', receipt: null });

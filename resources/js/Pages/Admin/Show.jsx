@@ -1,7 +1,7 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link } from '@inertiajs/react';
 import { formatDate, formatRp } from '@/utils/format';
-const catLabels = { venue: 'Venue', catering: 'Catering', decoration: 'Dekorasi', photo_video: 'Foto/Video', dress: 'Busana', ring: 'Cincin', venue: 'Venue', others: 'Lainnya' };
+const catLabels = { venue: 'Venue', catering: 'Catering', decoration: 'Dekorasi', photo_video: 'Foto/Video', dress: 'Busana', ring: 'Cincin', others: 'Lainnya' };
 
 export default function AdminShow({ targetUser, tasks, budgets, vendors, notes, totalSpent, taskProgress, budgetPercent }) {
     return (

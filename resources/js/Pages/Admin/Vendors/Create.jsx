@@ -1,6 +1,6 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
-const categories = ['photography', 'decoration', 'catering', 'mua', 'mc', 'others'];
+const categories = ['photography', 'decoration', 'catering', 'mua', 'mc', 'venue', 'others'];
 const catLabels = { photography: 'Fotografi', decoration: 'Dekorasi', catering: 'Katering', mua: 'MUA', mc: 'MC', venue: 'Venue', others: 'Lainnya' };
 
 export default function AdminVendorsCreate() {

@@ -51,6 +51,13 @@ export default function AdminIndex({ users, stats, filters }) {
                     <button onClick={() => { setSearch(''); setDateFrom(''); setDateTo(''); router.get(route('admin.index'), {}, { preserveState: true, replace: true }); }} className="rounded-md bg-gray-200 px-4 py-2 text-sm text-gray-600 hover:bg-gray-300 h-9">Reset</button>
                 </div>
 
+                {/* Export section */}
+                <div className="flex flex-wrap gap-3 items-center rounded-lg bg-white p-4 shadow">
+                    <span className="text-sm font-medium text-gray-700">Export Data User:</span>
+                    <a href={route('admin.export-pdf')} className="rounded-md bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-500 transition">📄 Export PDF</a>
+                    <a href={route('admin.export-csv')} className="rounded-md bg-green-600 px-4 py-2 text-sm font-semibold text-white hover:bg-green-500 transition">📊 Export CSV</a>
+                </div>
+
                 {/* Users table — di ATAS */}
                 <div className="rounded-lg bg-white shadow overflow-hidden">
                     <table className="min-w-full divide-y divide-gray-200 text-sm">

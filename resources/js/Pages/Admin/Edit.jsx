@@ -1,6 +1,5 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
-import { formatDate } from '@/utils/format';
 
 export default function AdminEdit({ targetUser }) {
     const { data, setData, put, processing, errors } = useForm({
