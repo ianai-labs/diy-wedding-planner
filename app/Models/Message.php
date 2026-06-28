@@ -2,13 +2,15 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+#[Fillable([
+    'user_id', 'message', 'is_from_admin',
+])]
 class Message extends Model
 {
-    protected $fillable = ['user_id', 'message', 'is_from_admin'];
-
     protected function casts(): array
     {
         return ['is_from_admin' => 'boolean'];

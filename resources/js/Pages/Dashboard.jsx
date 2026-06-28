@@ -7,7 +7,7 @@ import { formatDate, formatRp } from '@/utils/format';
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const budgetColors = ['#6366f1', '#ec4899', '#f59e0b', '#10b981', '#3b82f6', '#ef4444', '#8b5cf6'];
-const categoryLabels = { venue: 'Venue', catering: 'Catering', decoration: 'Dekorasi', photo_video: 'Foto/Video', dress: 'Busana', ring: 'Cincin', venue: 'Venue', others: 'Lainnya' };
+const categoryLabels = { venue: 'Venue', catering: 'Catering', decoration: 'Dekorasi', photo_video: 'Foto/Video', dress: 'Busana', ring: 'Cincin', others: 'Lainnya' };
 
 export default function Dashboard({
     totalBudget, totalSpent, remaining, budgetPercent,

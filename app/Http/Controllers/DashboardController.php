@@ -42,7 +42,7 @@ class DashboardController extends Controller
 
         // Countdown
         $daysLeft = $user->wedding_date
-            ? max(0, (int) now()->startOfDay()->diffInDays($user->wedding_date, false))
+            ? (int) now()->startOfDay()->diffInDays($user->wedding_date, false)
             : null;
 
         // Upcoming tasks (5 closest deadlines)

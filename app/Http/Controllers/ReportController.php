@@ -9,10 +9,11 @@ use App\Models\Vendor;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Response;
 use Inertia\Inertia;
+use Inertia\Response as InertiaResponse;
 
 class ReportController extends Controller
 {
-    public function index(): \Inertia\Response
+    public function index(): InertiaResponse
     {
         $userId = auth()->id();
 

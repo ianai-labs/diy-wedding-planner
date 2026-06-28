@@ -26,7 +26,7 @@ export default function TasksIndex({ tasks, filters }) {
     };
 
     const updateStatus = (taskId, newStatus) => {
-        router.patch(route('tasks.status', taskId), { status: newStatus }, { preserveScroll: true, preserveState: false });
+        router.patch(route('tasks.status', taskId), { status: newStatus }, { preserveScroll: true, preserveState: true });
     };
 
     const toggleExpand = (id) => setExpanded(prev => ({ ...prev, [id]: !prev[id] }));
@@ -35,21 +35,21 @@ export default function TasksIndex({ tasks, filters }) {
         const title = newSubTask[taskId];
         if (!title?.trim()) return;
         router.post(route('tasks.subtasks.store', taskId), { title }, {
-            preserveScroll: true, preserveState: false,
+            preserveScroll: true, preserveState: true,
             onSuccess: () => setNewSubTask(prev => ({ ...prev, [taskId]: '' })),
         });
     };
 
     const toggleSubTask = (taskId, subtaskId) => {
         router.patch(route('tasks.subtasks.toggle', { task: taskId, subtask: subtaskId }), {}, {
-            preserveScroll: true, preserveState: false,
+            preserveScroll: true, preserveState: true,
         });
     };
 
     const deleteSubTask = (taskId, subtaskId) => {
         if (!confirm('Hapus sub-task?')) return;
         router.delete(route('tasks.subtasks.destroy', { task: taskId, subtask: subtaskId }), {
-            preserveScroll: true, preserveState: false,
+            preserveScroll: true, preserveState: true,
         });
     };
 

@@ -10,7 +10,7 @@ th{background:#f3f4f6}.nowrap{white-space:nowrap}
 <h1>Daftar User — My Wedding Planner</h1>
 <p style="text-align:center;color:#666">Tanggal: {{ now()->format('d/m/Y') }}</p>
 <table><thead><tr>
-<th>#</th><th>Nama</th><th>Email</th><th>Pasangan</th><th>Pernikahan</th><th>H-Hari</th><th>Budget</th><th>Spent</th><th>Task</th><th>Vendor</th>
+<th>#</th><th>Nama</th><th>Email</th><th>Pasangan</th><th>Pernikahan</th><th>H-Hari</th><th>Budget</th><th>Spent</th><th>Task</th><th>Budgets</th><th>Notes</th>
 </tr></thead><tbody>
 @foreach($users as $i=>$u)
 <tr>
@@ -19,7 +19,7 @@ th{background:#f3f4f6}.nowrap{white-space:nowrap}
 <td class="nowrap">{{$u->days_left !== null ? ($u->days_left > 0 ? "H-{$u->days_left}" : 'Lewat') : '-'}}</td>
 <td>Rp {{number_format($u->total_budget,0,',','.')}}</td>
 <td>Rp {{number_format($u->total_spent,0,',','.')}}</td>
-<td>{{$u->tasks_count}}</td><td>{{$u->vendors_count}}</td>
+<td>{{$u->tasks_count}}</td><td>{{$u->budgets_count}}</td><td>{{$u->notes_count}}</td>
 </tr>
 @endforeach
 </tbody></table></body></html>

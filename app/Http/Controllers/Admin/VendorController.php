@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\VendorRequest;
 use App\Models\Vendor;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -34,19 +35,9 @@ class VendorController extends Controller
         return Inertia::render('Admin/Vendors/Create');
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(VendorRequest $request): RedirectResponse
     {
-        $validated = $request->validate([
-            'name'     => 'required|string|max:200',
-            'category' => 'required|in:photography,decoration,catering,mua,mc,venue,others',
-            'price'    => 'required|numeric|min:1',
-            'contact'  => 'required|string|max:50',
-            'address'  => 'nullable|string',
-            'notes'    => 'nullable|string',
-            'rating'   => 'nullable|integer|min:1|max:5',
-        ]);
-
-        Vendor::create($validated);
+        Vendor::create($request->validated());
 
         return redirect()->route('admin.vendors.index')
             ->with('success', 'Vendor berhasil ditambahkan.');
@@ -57,19 +48,9 @@ class VendorController extends Controller
         return Inertia::render('Admin/Vendors/Edit', ['vendor' => $vendor]);
     }
 
-    public function update(Request $request, Vendor $vendor): RedirectResponse
+    public function update(VendorRequest $request, Vendor $vendor): RedirectResponse
     {
-        $validated = $request->validate([
-            'name'     => 'required|string|max:200',
-            'category' => 'required|in:photography,decoration,catering,mua,mc,venue,others',
-            'price'    => 'required|numeric|min:1',
-            'contact'  => 'required|string|max:50',
-            'address'  => 'nullable|string',
-            'notes'    => 'nullable|string',
-            'rating'   => 'nullable|integer|min:1|max:5',
-        ]);
-
-        $vendor->update($validated);
+        $vendor->update($request->validated());
 
         return redirect()->route('admin.vendors.index')
             ->with('success', 'Vendor berhasil diperbarui.');

@@ -44,6 +44,8 @@ class VendorController extends Controller
             'description' => 'nullable|string|max:255',
         ]);
 
+        abort_if($vendor->price <= 0, 422, 'Harga vendor tidak valid.');
+
         Budget::create([
             'user_id'     => auth()->id(),
             'category'    => $vendor->category,

@@ -13,7 +13,7 @@ class ChatController extends Controller
     public function index(): Response
     {
         $messages = Message::where('user_id', auth()->id())
-            ->latest()
+            ->oldest()
             ->get();
 
         return Inertia::render('Messages/Index', [

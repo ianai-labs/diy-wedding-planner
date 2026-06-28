@@ -57,10 +57,9 @@ export default function BudgetsIndex({ budgets, totalBudget, totalSpent, totalPl
                     <div className="rounded-lg bg-white p-4 shadow"><p className="text-xs text-gray-500">Sisa</p><p className={`text-lg font-bold ${remaining < 0 ? 'text-red-600' : 'text-green-600'}`}>Rp {formatRp(remaining)}</p></div>
                 </div>
                 <div className="rounded-lg bg-white p-4 shadow">
-                    <div className="w-full bg-gray-200 rounded-full h-3 flex">
-                        <div className="bg-red-500 h-3 rounded-l-full" style={{ width: `${totalBudget > 0 ? Math.min((totalSpent / totalBudget) * 100, 100) : 0}%` }} />
-                        <div className="bg-blue-400 h-3" style={{ width: `${totalBudget > 0 ? Math.min((totalPlanned / totalBudget) * 100, 100) : 0}%` }} />
-                        <div className="flex-1" />
+                    <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden flex">
+                        <div className="bg-red-500 h-3" style={{ minWidth: `${totalBudget > 0 ? Math.min((totalSpent / totalBudget) * 100, 100) : 0}%` }} />
+                        <div className="bg-blue-400 h-3" style={{ minWidth: `${totalBudget > 0 ? Math.min((totalPlanned / totalBudget) * 100, 100 - Math.min((totalSpent / totalBudget) * 100, 100)) : 0}%` }} />
                     </div>
                     <div className="flex gap-4 mt-1 text-xs text-gray-500">
                         <span>🔴 Spent {totalBudget > 0 ? Math.round((totalSpent / totalBudget) * 100) : 0}%</span>

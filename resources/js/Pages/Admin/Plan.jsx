@@ -1,11 +1,16 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, Link, router, useForm } from '@inertiajs/react';
-import { useState } from 'react';
+import { Head, Link, useForm } from '@inertiajs/react';
+import { useState, useEffect, useRef } from 'react';
 import { formatDate, formatRp } from '@/utils/format';
 
 export default function AdminPlan({ targetUser, tasks, budgets, notes, messages, totalSpent, taskProgress, budgetPercent }) {
     const [tab, setTab] = useState('dashboard');
     const { data, setData, post, processing, reset } = useForm({ message: '' });
+    const bottomRef = useRef(null);
+
+    useEffect(() => {
+        bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, [messages]);
 
     const submitChat = (e) => {
         e.preventDefault();
@@ -164,6 +169,7 @@ export default function AdminPlan({ targetUser, tasks, budgets, notes, messages,
                                     </div>
                                 </div>
                             ))}
+                            <div ref={bottomRef} />
                         </div>
                         <form onSubmit={submitChat} className="flex gap-2">
                             <input type="text" value={data.message} onChange={e => setData('message', e.target.value)}
