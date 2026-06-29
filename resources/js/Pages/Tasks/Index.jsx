@@ -25,32 +25,60 @@ export default function TasksIndex({ tasks, filters }) {
         router.get(route('tasks.index'), { search, category, status }, { preserveState: true, replace: true });
     };
 
-    const updateStatus = (taskId, newStatus) => {
-        router.patch(route('tasks.status', taskId), { status: newStatus }, { preserveScroll: true, preserveState: true });
+    const reloadTasks = () => router.reload({ only: ['tasks', 'filters'] });
+
+    const updateStatus = async (taskId, newStatus) => {
+        await fetch(route('tasks.status', taskId), {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '',
+            },
+            body: JSON.stringify({ status: newStatus }),
+        });
+        reloadTasks();
     };
 
     const toggleExpand = (id) => setExpanded(prev => ({ ...prev, [id]: !prev[id] }));
 
-    const addSubTask = (taskId) => {
+    const addSubTask = async (taskId) => {
         const title = newSubTask[taskId];
         if (!title?.trim()) return;
-        router.post(route('tasks.subtasks.store', taskId), { title }, {
-            preserveScroll: true, preserveState: true,
-            onSuccess: () => setNewSubTask(prev => ({ ...prev, [taskId]: '' })),
+        await fetch(route('tasks.subtasks.store', taskId), {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '',
+            },
+            body: JSON.stringify({ title }),
         });
+        setNewSubTask(prev => ({ ...prev, [taskId]: '' }));
+        reloadTasks();
     };
 
-    const toggleSubTask = (taskId, subtaskId) => {
-        router.patch(route('tasks.subtasks.toggle', { task: taskId, subtask: subtaskId }), {}, {
-            preserveScroll: true, preserveState: true,
+    const toggleSubTask = async (taskId, subtaskId) => {
+        await fetch(route('tasks.subtasks.toggle', { task: taskId, subtask: subtaskId }), {
+            method: 'PATCH',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '',
+            },
         });
+        reloadTasks();
     };
 
-    const deleteSubTask = (taskId, subtaskId) => {
+    const deleteSubTask = async (taskId, subtaskId) => {
         if (!confirm('Hapus sub-task?')) return;
-        router.delete(route('tasks.subtasks.destroy', { task: taskId, subtask: subtaskId }), {
-            preserveScroll: true, preserveState: true,
+        await fetch(route('tasks.subtasks.destroy', { task: taskId, subtask: subtaskId }), {
+            method: 'DELETE',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '',
+            },
         });
+        reloadTasks();
     };
 
     return (

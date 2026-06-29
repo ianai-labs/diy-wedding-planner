@@ -97,13 +97,13 @@ class TaskController extends Controller
         return response()->json(['success' => true, 'status' => $task->status]);
     }
 
-    public function storeSubTask(Request $request, Task $task): RedirectResponse
+    public function storeSubTask(Request $request, Task $task): JsonResponse
     {
         abort_if($task->user_id !== auth()->id(), 403);
 
         $validated = $request->validate(['title' => 'required|string|max:200']);
 
-        $task->children()->create([
+        $subtask = $task->children()->create([
             'user_id'  => auth()->id(),
             'title'    => $validated['title'],
             'category' => $task->category,
@@ -111,25 +111,25 @@ class TaskController extends Controller
             'priority' => 'low',
         ]);
 
-        return back()->with('success', 'Sub-task ditambahkan.');
+        return response()->json(['success' => true, 'subtask' => $subtask]);
     }
 
-    public function toggleSubTask(Task $task, Task $subtask): RedirectResponse
+    public function toggleSubTask(Task $task, Task $subtask): JsonResponse
     {
         abort_if($subtask->user_id !== auth()->id(), 403);
 
         $newStatus = $subtask->status === 'completed' ? 'pending' : 'completed';
         $subtask->update(['status' => $newStatus]);
 
-        return back()->with('success', 'Sub-task diperbarui.');
+        return response()->json(['success' => true, 'status' => $newStatus]);
     }
 
-    public function destroySubTask(Task $task, Task $subtask): RedirectResponse
+    public function destroySubTask(Task $task, Task $subtask): JsonResponse
     {
         abort_if($subtask->user_id !== auth()->id(), 403);
 
         $subtask->delete();
 
-        return back()->with('success', 'Sub-task dihapus.');
+        return response()->json(['success' => true]);
     }
 }
