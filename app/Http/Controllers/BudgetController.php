@@ -56,6 +56,7 @@ class BudgetController extends Controller
         if ($request->hasFile('receipt')) {
             $data['receipt_path'] = $request->file('receipt')->store('receipts', 'public');
         }
+        unset($data['receipt']);
         $data['user_id'] = auth()->id();
 
         Budget::create($data);
@@ -80,6 +81,18 @@ class BudgetController extends Controller
         abort_if($budget->user_id !== auth()->id(), 403);
 
         $validated = $request->validated();
+
+        if ($request->hasFile('receipt')) {
+            // Hapus file receipt lama jika ada
+            if ($budget->receipt_path) {
+                Storage::disk('public')->delete($budget->receipt_path);
+            }
+            $validated['receipt_path'] = $request->file('receipt')->store('receipts', 'public');
+        }
+
+        // Hapus 'receipt' dari validated data karena bukan kolom database
+        unset($validated['receipt']);
+
         $budget->update($validated);
 
         return redirect()->route('budgets.index')->with('success', 'Budget berhasil diperbarui.');

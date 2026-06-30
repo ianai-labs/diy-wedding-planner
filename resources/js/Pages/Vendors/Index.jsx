@@ -17,7 +17,7 @@ export default function VendorsIndex({ vendors, filters }) {
             <Head title="Vendor List" />
             <div className="space-y-6">
                 <div className="flex items-center justify-between">
-                    <h2 className="text-2xl font-bold text-gray-800">Vendor List</h2>
+                    <h2 className="text-2xl font-bold text-burgundy">Vendor List</h2>
                 </div>
 
                 {flash?.success && <div className="rounded-md bg-green-50 p-4 text-sm text-green-700">{flash.success}</div>}
@@ -30,7 +30,7 @@ export default function VendorsIndex({ vendors, filters }) {
                         {Object.entries(catLabels).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
                     </select>
                     <button onClick={() => router.get(route('vendors.index'), { search, category, sort }, { preserveState: true, replace: true })}
-                        className="rounded-md bg-gray-600 px-4 py-2 text-sm text-white hover:bg-gray-500">Filter</button>
+                        className="rounded-md bg-gray-700 px-4 py-2 text-sm text-white hover:bg-gray-800">Filter</button>
                     <button onClick={() => {
                         const newSort = sort === 'price_asc' ? 'price_desc' : 'price_asc';
                         setSort(newSort);
@@ -49,17 +49,17 @@ export default function VendorsIndex({ vendors, filters }) {
                     <>
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                             {vendors.data.map((v) => (
-                                <div key={v.id} className="rounded-lg bg-white shadow hover:shadow-md transition overflow-hidden">
+                                <div key={v.id} className="rounded-xl bg-white shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100 hover:shadow-[0_4px_16px_rgba(0,0,0,0.08)] transition overflow-hidden">
                                     <div className="p-4 space-y-3">
                                         <div className="flex items-start justify-between">
-                                            <Link href={route('vendors.show', v.id)} className="font-semibold text-gray-800 hover:text-indigo-600">{v.name}</Link>
-                                            <span className="text-xs px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700">{catLabels[v.category] || v.category}</span>
+                                            <Link href={route('vendors.show', v.id)} className="font-semibold text-gray-800 hover:text-rose">{v.name}</Link>
+                                            <span className="text-xs px-2 py-0.5 rounded-lg bg-rose/5 text-rose">{catLabels[v.category] || v.category}</span>
                                         </div>
-                                        <p className="text-lg font-bold text-indigo-600">Rp {formatRp(v.price)}</p>
+                                        <p className="text-lg font-bold text-rose">Rp {formatRp(v.price)}</p>
                                         <p className="text-xs text-gray-400">{v.contact} {v.address ? `· ${v.address}` : ''}</p>
                                         <p className="text-yellow-500 text-sm">{stars(v.rating)}</p>
                                         <div className="flex gap-2 pt-2 border-t">
-                                            <Link href={route('vendors.show', v.id)} className="rounded-md bg-gray-100 px-3 py-1.5 text-xs text-gray-700 hover:bg-gray-200">Detail</Link>
+                                            <Link href={route('vendors.show', v.id)} className="rounded-md bg-gray-100 px-3 py-1.5 text-xs text-gray-800 hover:bg-gray-200">Detail</Link>
                                             <Link href={route('vendors.show', v.id) + '?add=1'} className="rounded-md bg-green-600 px-3 py-1.5 text-xs text-white hover:bg-green-500">+ Budget</Link>
                                         </div>
                                     </div>
@@ -70,7 +70,7 @@ export default function VendorsIndex({ vendors, filters }) {
                             <div className="flex justify-center gap-1">
                                 {vendors.links.map((l, i) => (
                                     <Link key={i} href={l.url || '#'}
-                                        className={`px-3 py-1.5 text-sm rounded ${l.active ? 'bg-indigo-600 text-white' : l.url ? 'bg-white text-gray-600 hover:bg-gray-100' : 'text-gray-300 cursor-default'}`}
+                                        className={`px-3 py-1.5 text-sm rounded ${l.active ? 'bg-rose text-white' : l.url ? 'bg-white text-gray-600 hover:bg-gray-100' : 'text-gray-300 cursor-default'}`}
                                         dangerouslySetInnerHTML={{ __html: l.label }} />
                                 ))}
                             </div>

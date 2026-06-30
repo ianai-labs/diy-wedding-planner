@@ -31,17 +31,17 @@ export default function AdminPlan({ targetUser, tasks, budgets, notes, messages,
             <div className="space-y-6">
                 <div className="flex items-center justify-between">
                     <div>
-                        <h2 className="text-2xl font-bold text-gray-800">{targetUser.name}</h2>
-                        <p className="text-sm text-gray-500">{targetUser.email} · {targetUser.partner_name && `Pasangan: ${targetUser.partner_name}`} · Pernikahan: {formatDate(targetUser.wedding_date)} · Budget: Rp {formatRp(targetUser.total_budget)}</p>
+                        <h2 className="text-2xl font-bold text-burgundy">{targetUser.name}</h2>
+                        <p className="text-sm text-gray-600">{targetUser.email} · {targetUser.partner_name && `Pasangan: ${targetUser.partner_name}`} · Pernikahan: {formatDate(targetUser.wedding_date)} · Budget: Rp {formatRp(targetUser.total_budget)}</p>
                     </div>
-                    <Link href={route('admin.index')} className="text-sm text-indigo-600 hover:underline">← Kembali</Link>
+                    <Link href={route('admin.index')} className="text-sm text-rose hover:underline">← Kembali</Link>
                 </div>
 
                 {/* Tabs */}
                 <div className="flex gap-1 border-b border-gray-200">
                     {tabs.map(t => (
                         <button key={t.key} onClick={() => setTab(t.key)}
-                            className={`px-4 py-2 text-sm font-medium border-b-2 transition ${tab === t.key ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>
+                            className={`px-4 py-2 text-sm font-medium border-b-2 transition ${tab === t.key ? 'border-rose text-rose' : 'border-transparent text-gray-600 hover:text-gray-800'}`}>
                             {t.label}
                         </button>
                     ))}
@@ -51,13 +51,13 @@ export default function AdminPlan({ targetUser, tasks, budgets, notes, messages,
                 {tab === 'dashboard' && (
                     <div className="space-y-4">
                         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                            <div className="rounded-lg bg-white p-4 shadow"><p className="text-xs text-gray-500">Total Budget</p><p className="text-xl font-bold">Rp {formatRp(targetUser.total_budget)}</p></div>
-                            <div className="rounded-lg bg-white p-4 shadow"><p className="text-xs text-gray-500">Spent</p><p className="text-xl font-bold text-red-600">Rp {formatRp(totalSpent)}</p></div>
-                            <div className="rounded-lg bg-white p-4 shadow"><p className="text-xs text-gray-500">Task Progress</p><p className="text-xl font-bold text-blue-600">{taskProgress}%</p></div>
-                            <div className="rounded-lg bg-white p-4 shadow"><p className="text-xs text-gray-500">Budget Progress</p><p className="text-xl font-bold text-indigo-600">{budgetPercent}%</p></div>
+                            <div className="rounded-xl bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100"><p className="text-xs text-gray-600">Total Budget</p><p className="text-xl font-bold">Rp {formatRp(targetUser.total_budget)}</p></div>
+                            <div className="rounded-xl bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100"><p className="text-xs text-gray-600">Spent</p><p className="text-xl font-bold text-red-600">Rp {formatRp(totalSpent)}</p></div>
+                            <div className="rounded-xl bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100"><p className="text-xs text-gray-600">Task Progress</p><p className="text-xl font-bold text-blue-600">{taskProgress}%</p></div>
+                            <div className="rounded-xl bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100"><p className="text-xs text-gray-600">Budget Progress</p><p className="text-xl font-bold text-rose">{budgetPercent}%</p></div>
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div className="rounded-lg bg-white p-4 shadow">
+                            <div className="rounded-xl bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100">
                                 <h3 className="text-sm font-semibold mb-3">Task Terbaru</h3>
                                 {tasks.length === 0 ? <p className="text-xs text-gray-400">Belum ada task.</p> : (
                                     <ul className="space-y-2">{tasks.slice(0, 8).map(t => (
@@ -68,7 +68,7 @@ export default function AdminPlan({ targetUser, tasks, budgets, notes, messages,
                                     ))}</ul>
                                 )}
                             </div>
-                            <div className="rounded-lg bg-white p-4 shadow">
+                            <div className="rounded-xl bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100">
                                 <h3 className="text-sm font-semibold mb-3">Budget Terbaru</h3>
                                 {budgets.length === 0 ? <p className="text-xs text-gray-400">Belum ada budget.</p> : (
                                     <ul className="space-y-2">{budgets.slice(0, 8).map(b => (
@@ -85,14 +85,14 @@ export default function AdminPlan({ targetUser, tasks, budgets, notes, messages,
 
                 {/* Tab: Tasks */}
                 {tab === 'tasks' && (
-                    <div className="rounded-lg bg-white shadow overflow-hidden">
+                    <div className="rounded-xl bg-white shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100 overflow-hidden">
                         <table className="min-w-full divide-y divide-gray-200 text-sm">
-                            <thead className="bg-gray-50"><tr>
-                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Judul</th>
-                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Kategori</th>
-                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Deadline</th>
-                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Prioritas</th>
-                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                            <thead className="bg-cream/50"><tr>
+                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-600 uppercase">Judul</th>
+                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-600 uppercase">Kategori</th>
+                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-600 uppercase">Deadline</th>
+                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-600 uppercase">Prioritas</th>
+                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-600 uppercase">Status</th>
                             </tr></thead>
                             <tbody className="divide-y divide-gray-200">
                                 {tasks.length === 0 ? <tr><td colSpan={5} className="px-4 py-8 text-center text-gray-400">Belum ada task.</td></tr>
@@ -112,14 +112,14 @@ export default function AdminPlan({ targetUser, tasks, budgets, notes, messages,
 
                 {/* Tab: Budgets */}
                 {tab === 'budgets' && (
-                    <div className="rounded-lg bg-white shadow overflow-hidden">
+                    <div className="rounded-xl bg-white shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100 overflow-hidden">
                         <table className="min-w-full divide-y divide-gray-200 text-sm">
-                            <thead className="bg-gray-50"><tr>
-                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Deskripsi</th>
-                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Kategori</th>
-                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Jumlah</th>
-                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Tanggal</th>
-                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                            <thead className="bg-cream/50"><tr>
+                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-600 uppercase">Deskripsi</th>
+                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-600 uppercase">Kategori</th>
+                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-600 uppercase">Jumlah</th>
+                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-600 uppercase">Tanggal</th>
+                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-600 uppercase">Status</th>
                             </tr></thead>
                             <tbody className="divide-y divide-gray-200">
                                 {budgets.length === 0 ? <tr><td colSpan={5} className="px-4 py-8 text-center text-gray-400">Belum ada budget.</td></tr>
@@ -143,9 +143,9 @@ export default function AdminPlan({ targetUser, tasks, budgets, notes, messages,
                         {notes.length === 0 ? <p className="text-center text-gray-400 py-12">Belum ada catatan.</p> : (
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                                 {notes.map(n => (
-                                    <div key={n.id} className="rounded-lg bg-white shadow p-4 space-y-2">
-                                        <h3 className="font-semibold text-gray-800">{n.title}</h3>
-                                        <p className="text-sm text-gray-500 line-clamp-4">{n.content}</p>
+                                    <div key={n.id} className="rounded-xl bg-white shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100 p-4 space-y-2">
+                                        <h3 className="font-semibold text-burgundy">{n.title}</h3>
+                                        <p className="text-sm text-gray-600 line-clamp-4">{n.content}</p>
                                     </div>
                                 ))}
                             </div>
@@ -156,14 +156,14 @@ export default function AdminPlan({ targetUser, tasks, budgets, notes, messages,
                 {/* Tab: Chat */}
                 {tab === 'chat' && (
                     <div className="flex flex-col h-[500px]">
-                        <div className="flex-1 overflow-y-auto rounded-lg bg-white shadow p-4 space-y-3 mb-3">
+                        <div className="flex-1 overflow-y-auto rounded-xl bg-white shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100 p-4 space-y-3 mb-3">
                             {messages.length === 0 ? (
                                 <p className="text-center text-gray-400 py-12">Belum ada pesan dari user ini.</p>
                             ) : messages.map((m) => (
                                 <div key={m.id} className={`flex ${m.is_from_admin ? 'justify-end' : 'justify-start'}`}>
-                                    <div className={`max-w-[75%] rounded-lg px-4 py-2 ${m.is_from_admin ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-800'}`}>
+                                    <div className={`max-w-[75%] rounded-lg px-4 py-2 ${m.is_from_admin ? 'bg-rose text-white' : 'bg-gray-100 text-gray-800'}`}>
                                         <p className="text-sm">{m.message}</p>
-                                        <p className={`text-xs mt-1 ${m.is_from_admin ? 'text-indigo-200' : 'text-gray-400'}`}>
+                                        <p className={`text-xs mt-1 ${m.is_from_admin ? 'text-rose/60' : 'text-gray-400'}`}>
                                             {new Date(m.created_at).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}
                                         </p>
                                     </div>
@@ -175,7 +175,7 @@ export default function AdminPlan({ targetUser, tasks, budgets, notes, messages,
                             <input type="text" value={data.message} onChange={e => setData('message', e.target.value)}
                                 placeholder="Balas pesan..." className="flex-1 rounded-md border-gray-300 shadow-sm" required />
                             <button type="submit" disabled={processing}
-                                className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500 disabled:opacity-50">Kirim</button>
+                                className="rounded-md bg-rose px-4 py-2 text-sm font-semibold text-white hover:bg-rose-hover disabled:opacity-50">Kirim</button>
                         </form>
                     </div>
                 )}

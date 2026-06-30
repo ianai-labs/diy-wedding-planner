@@ -20,9 +20,15 @@ class DashboardController extends Controller
         $totalSpent = Budget::where('user_id', $userId)
             ->where('status', 'spent')
             ->sum('amount');
-        $remaining = $totalBudget - $totalSpent;
+        $totalPlanned = Budget::where('user_id', $userId)
+            ->where('status', 'planned')
+            ->sum('amount');
+        $remaining = $totalBudget - $totalSpent - $totalPlanned;
         $budgetPercent = $totalBudget > 0
             ? round(($totalSpent / $totalBudget) * 100, 1)
+            : 0;
+        $budgetUsedPercent = $totalBudget > 0
+            ? round((($totalSpent + $totalPlanned) / $totalBudget) * 100, 1)
             : 0;
 
         // Checklist progress
@@ -74,8 +80,10 @@ class DashboardController extends Controller
         return Inertia::render('Dashboard', [
             'totalBudget' => $totalBudget,
             'totalSpent' => $totalSpent,
+            'totalPlanned' => $totalPlanned,
             'remaining' => $remaining,
             'budgetPercent' => $budgetPercent,
+            'budgetUsedPercent' => $budgetUsedPercent,
             'totalTasks' => $totalTasks,
             'completedTasks' => $completedTasks,
             'pendingTasks' => $pendingTasks,

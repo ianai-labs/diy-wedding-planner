@@ -21,33 +21,24 @@ export default function AuthenticatedLayout({ header, children }) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
     return (
-        <div className="flex h-screen bg-gray-100">
+        <div className="flex h-screen bg-cream">
             {/* Sidebar - Desktop */}
             <aside className="hidden lg:flex lg:w-64 lg:flex-col">
-                <div className="flex flex-col flex-grow bg-white border-r border-gray-200 pt-5 pb-4 overflow-y-auto">
+                <div className="flex flex-col flex-grow glass border-r border-white/30 pt-5 pb-4 overflow-y-auto">
                     <div className="flex items-center shrink-0 px-4">
                         <Link href="/">
-                            <ApplicationLogo className="block h-9 w-auto fill-current text-gray-800" />
+                            <ApplicationLogo className="block h-9 w-auto fill-current text-burgundy" />
                         </Link>
-                        <span className="ml-2 text-lg font-semibold text-gray-800">Wedding Planner</span>
+                        <span className="ml-2 text-lg font-semibold text-burgundy">Wedding Planner</span>
                     </div>
                     <nav className="mt-8 flex-1 flex flex-col space-y-1 px-3">
                         {isAdmin ? (
                             <>
-                                {userNavItems.filter(i => i.route === 'dashboard').map((item) => (
-                                    <NavLink key={item.route} href={route(item.route)} active={route().current('dashboard')}>
-                                        <svg className="mr-3 h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                                            <path strokeLinecap="round" strokeLinejoin="round" d={item.icon} />
-                                        </svg>
-                                        {item.name}
-                                    </NavLink>
-                                ))}
                                 <NavLink href={route('admin.index')} active={route().current('admin.index')}>
                                     <svg className="mr-3 h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        <path strokeLinecap="round" strokeLinejoin="round" d={userNavItems.find(i => i.route === 'dashboard').icon} />
                                     </svg>
-                                    Admin Panel
+                                    Admin Dashboard
                                 </NavLink>
                                 <NavLink href={route('admin.vendors.index')} active={route().current('admin.vendors.*')}>
                                     <svg className="mr-3 h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -79,12 +70,12 @@ export default function AuthenticatedLayout({ header, children }) {
             {/* Main content */}
             <div className="flex flex-1 flex-col overflow-hidden">
                 {/* Top header */}
-                <header className="bg-white border-b border-gray-200">
+                <header className="bg-cream/80 backdrop-blur-md border-b border-gray-100">
                     <div className="flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
                         {/* Mobile menu button */}
                         <button
                             type="button"
-                            className="lg:hidden -ml-0.5 p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none"
+                            className="lg:hidden -ml-0.5 p-2 rounded-md text-gray-400 hover:text-gray-600 hover:bg-rose/5 focus:outline-none"
                             onClick={() => setSidebarOpen(!sidebarOpen)}
                         >
                             <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -104,14 +95,14 @@ export default function AuthenticatedLayout({ header, children }) {
                             </span>
                             <Dropdown>
                                 <Dropdown.Trigger>
-                                    <button className="flex items-center gap-2 rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                    <button className="flex items-center gap-2 rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-rose focus:ring-offset-2">
                                         <span className="sr-only">Open user menu</span>
-                                        <div className="h-8 w-8 rounded-full bg-indigo-100 flex items-center justify-center">
-                                            <span className="text-sm font-medium text-indigo-700">
+                                        <div className="h-8 w-8 rounded-full bg-rose/10 flex items-center justify-center">
+                                            <span className="text-sm font-medium text-rose">
                                                 {user.name?.charAt(0).toUpperCase()}
                                             </span>
                                         </div>
-                                        <span className="hidden md:block text-sm font-medium text-gray-700">{user.name}</span>
+                                        <span className="hidden md:block text-sm font-medium text-gray-800">{user.name}</span>
                                         <svg className="hidden md:block h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                                         </svg>
@@ -127,24 +118,15 @@ export default function AuthenticatedLayout({ header, children }) {
 
                     {/* Mobile sidebar */}
                     {sidebarOpen && (
-                        <div className="lg:hidden border-t border-gray-200 bg-white">
+                        <div className="lg:hidden border-t border-white/30 glass">
                             <nav className="space-y-1 px-3 pb-3 pt-2">
                                 {isAdmin ? (
                                     <>
-                                        {userNavItems.filter(i => i.route === 'dashboard').map((item) => (
-                                            <NavLink key={item.route} href={route(item.route)} active={route().current('dashboard')}>
-                                                <svg className="mr-3 h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                                                    <path strokeLinecap="round" strokeLinejoin="round" d={item.icon} />
-                                                </svg>
-                                                {item.name}
-                                            </NavLink>
-                                        ))}
                                         <NavLink href={route('admin.index')} active={route().current('admin.index')}>
                                             <svg className="mr-3 h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                                                <path strokeLinecap="round" strokeLinejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                                                <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                <path strokeLinecap="round" strokeLinejoin="round" d={userNavItems.find(i => i.route === 'dashboard').icon} />
                                             </svg>
-                                            Admin Panel
+                                            Admin Dashboard
                                         </NavLink>
                                         <NavLink href={route('admin.vendors.index')} active={route().current('admin.vendors.*')}>
                                             <svg className="mr-3 h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>

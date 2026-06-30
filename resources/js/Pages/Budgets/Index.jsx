@@ -1,4 +1,5 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import ConfirmDeleteModal from '@/Components/ConfirmDeleteModal';
 import { Head, Link, router, useForm, usePage } from '@inertiajs/react';
 import { useState } from 'react';
 import { formatDate, formatRp } from '@/utils/format';
@@ -19,7 +20,16 @@ export default function BudgetsIndex({ budgets, totalBudget, totalSpent, totalPl
     const [search, setSearch] = useState(filters.search || '');
     const [category, setCategory] = useState(filters.category || '');
     const [month, setMonth] = useState(filters.month || '');
-// Add-to-task modal state
+    const [deleteId, setDeleteId] = useState(null);
+    const { delete: destroy, processing: deleteProcessing } = useForm();
+
+    const handleDelete = () => {
+        destroy(route('budgets.destroy', deleteId), {
+            onSuccess: () => setDeleteId(null),
+        });
+    };
+
+    // Add-to-task modal state
     const [taskModal, setTaskModal] = useState(null); // { id, description, category }
     const { data: taskData, setData: setTaskData, post: postTask, processing: taskProcessing, errors: taskErrors, reset: resetTask } = useForm({
         title: '', category: 'H-365', priority: 'medium', deadline: '',
@@ -47,53 +57,53 @@ export default function BudgetsIndex({ budgets, totalBudget, totalSpent, totalPl
             <Head title="Budget" />
             <div className="space-y-6">
                 <div className="flex items-center justify-between">
-                    <h2 className="text-2xl font-bold text-gray-800">Budget Tracker</h2>
-                    <Link href={route('budgets.create')} className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500">+ Tambah</Link>
+                    <h2 className="text-2xl font-bold text-burgundy">Budget Tracker</h2>
+                    <Link href={route('budgets.create')} className="rounded-md bg-rose px-4 py-2 text-sm font-semibold text-white hover:bg-rose-hover">+ Tambah</Link>
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                    <div className="rounded-lg bg-white p-4 shadow"><p className="text-xs text-gray-500">Total Budget</p><p className="text-lg font-bold">Rp {formatRp(totalBudget)}</p></div>
-                    <div className="rounded-lg bg-white p-4 shadow"><p className="text-xs text-gray-500">Terpakai (Spent)</p><p className="text-lg font-bold text-red-600">Rp {formatRp(totalSpent)}</p></div>
-                    <div className="rounded-lg bg-white p-4 shadow"><p className="text-xs text-gray-500">Rencana (Planned)</p><p className="text-lg font-bold text-blue-600">Rp {formatRp(totalPlanned)}</p></div>
-                    <div className="rounded-lg bg-white p-4 shadow"><p className="text-xs text-gray-500">Sisa</p><p className={`text-lg font-bold ${remaining < 0 ? 'text-red-600' : 'text-green-600'}`}>Rp {formatRp(remaining)}</p></div>
+                    <div className="rounded-xl bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100"><p className="text-xs text-gray-600">Total Budget</p><p className="text-lg font-bold">Rp {formatRp(totalBudget)}</p></div>
+                    <div className="rounded-xl bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100"><p className="text-xs text-gray-600">Terpakai (Spent)</p><p className="text-lg font-bold text-red-600">Rp {formatRp(totalSpent)}</p></div>
+                    <div className="rounded-xl bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100"><p className="text-xs text-gray-600">Rencana (Planned)</p><p className="text-lg font-bold text-blue-600">Rp {formatRp(totalPlanned)}</p></div>
+                    <div className="rounded-xl bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100"><p className="text-xs text-gray-600">Sisa</p><p className={`text-lg font-bold ${remaining < 0 ? 'text-red-600' : 'text-green-600'}`}>Rp {formatRp(remaining)}</p></div>
                 </div>
-                <div className="rounded-lg bg-white p-4 shadow">
+                <div className="rounded-xl bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100">
                     <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden flex">
                         <div className="bg-red-500 h-3" style={{ minWidth: `${totalBudget > 0 ? Math.min((totalSpent / totalBudget) * 100, 100) : 0}%` }} />
-                        <div className="bg-blue-400 h-3" style={{ minWidth: `${totalBudget > 0 ? Math.min((totalPlanned / totalBudget) * 100, 100 - Math.min((totalSpent / totalBudget) * 100, 100)) : 0}%` }} />
+                        <div className="bg-rose/40 h-3" style={{ minWidth: `${totalBudget > 0 ? Math.min((totalPlanned / totalBudget) * 100, 100 - Math.min((totalSpent / totalBudget) * 100, 100)) : 0}%` }} />
                     </div>
-                    <div className="flex gap-4 mt-1 text-xs text-gray-500">
+                    <div className="flex gap-4 mt-1 text-xs text-gray-600">
                         <span>🔴 Spent {totalBudget > 0 ? Math.round((totalSpent / totalBudget) * 100) : 0}%</span>
                         <span>🔵 Planned {totalBudget > 0 ? Math.round((totalPlanned / totalBudget) * 100) : 0}%</span>
                     </div>
                 </div>
                 <div className="flex flex-wrap gap-3">
-                    <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Cari..." className="rounded-md border-gray-300 text-sm" />
-                    <select value={category} onChange={(e) => setCategory(e.target.value)} className="rounded-md border-gray-300 text-sm">
+                    <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Cari..." className="rounded-lg border-gray-300 text-sm" />
+                    <select value={category} onChange={(e) => setCategory(e.target.value)} className="rounded-lg border-gray-300 text-sm">
                         <option value="">Semua Kategori</option>
                         {Object.entries(categoryLabels).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
                     </select>
-                    <input type="month" value={month} onChange={(e) => setMonth(e.target.value)} className="rounded-md border-gray-300 text-sm" />
-                    <button onClick={() => router.get(route('budgets.index'), { search, category, month }, { preserveState: true, replace: true })} className="rounded-md bg-gray-600 px-4 py-2 text-sm text-white hover:bg-gray-500">Filter</button>
+                    <input type="month" value={month} onChange={(e) => setMonth(e.target.value)} className="rounded-lg border-gray-300 text-sm" />
+                    <button onClick={() => router.get(route('budgets.index'), { search, category, month }, { preserveState: true, replace: true })} className="rounded-md bg-gray-700 px-4 py-2 text-sm text-white hover:bg-gray-800">Filter</button>
                 </div>
                 {flash?.success && <div className="rounded-md bg-green-50 p-4 text-sm text-green-700">{flash.success}</div>}
-                <div className="rounded-lg bg-white shadow overflow-hidden">
+                <div className="rounded-xl bg-white shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100 overflow-hidden">
                     <table className="min-w-full divide-y divide-gray-200">
-                        <thead className="bg-gray-50"><tr><th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Deskripsi</th><th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Kategori</th><th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Jumlah</th><th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tanggal</th><th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th><th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">Add to Task</th><th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Aksi</th></tr></thead>
+                        <thead className="bg-cream/50"><tr><th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase">Deskripsi</th><th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase">Kategori</th><th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase">Jumlah</th><th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase">Tanggal</th><th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase">Status</th><th className="px-4 py-3 text-center text-xs font-medium text-gray-600 uppercase">Add to Task</th><th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase">Aksi</th></tr></thead>
                         <tbody className="divide-y divide-gray-200">
                             {budgets.data.length === 0 ? <tr><td colSpan={7} className="px-4 py-8 text-center text-gray-400">Belum ada data budget.</td></tr>
                                 : budgets.data.map((b) => (
-                                    <tr key={b.id} className="hover:bg-gray-50">
-                                        <td className="px-4 py-3"><Link href={route('budgets.show', b.id)} className="text-sm font-medium text-indigo-600 hover:underline">{b.description}</Link></td>
+                                    <tr key={b.id} className="hover:bg-rose/[0.03]">
+                                        <td className="px-4 py-3"><Link href={route('budgets.show', b.id)} className="text-sm font-medium text-rose hover:underline">{b.description}</Link></td>
                                         <td className="px-4 py-3 text-sm text-gray-600">{categoryLabels[b.category] || b.category}</td>
                                         <td className="px-4 py-3 text-sm font-medium">Rp {formatRp(b.amount)}</td>
                                         <td className="px-4 py-3 text-sm text-gray-600">{formatDate(b.date)}</td>
-                                        <td className="px-4 py-3"><span className={`inline-flex rounded-full px-2 py-1 text-xs font-medium ${b.status === 'spent' ? 'bg-red-100 text-red-700' : 'bg-blue-100 text-blue-700'}`}>{b.status === 'spent' ? 'Spent' : 'Planned'}</span></td>
+                                        <td className="px-4 py-3"><span className={`inline-flex rounded-lg px-2 py-1 text-xs font-medium ${b.status === 'spent' ? 'bg-red-100 text-red-700' : 'bg-blue-100 text-blue-700'}`}>{b.status === 'spent' ? 'Spent' : 'Planned'}</span></td>
                                         <td className="px-4 py-3 text-center">
                                             <button onClick={() => openTaskModal(b)} className="text-green-600 hover:text-green-800 text-xs font-medium" title="Add to Checklist">+ Checklist</button>
                                         </td>
                                         <td className="px-4 py-3 text-sm space-x-1">
-                                            <Link href={route('budgets.edit', b.id)} className="text-indigo-600 hover:underline">Edit</Link>
-                                            <Link href={route('budgets.destroy', b.id)} method="delete" as="button" className="text-red-600 hover:underline" onClick={(e) => { if (!confirm('Hapus?')) e.preventDefault(); }}>Hapus</Link>
+                                            <Link href={route('budgets.edit', b.id)} className="text-rose hover:underline">Edit</Link>
+                                            <button onClick={() => setDeleteId(b.id)} className="text-red-600 hover:underline">Hapus</button>
                                         </td>
                                     </tr>
                                 ))}
@@ -105,26 +115,26 @@ export default function BudgetsIndex({ budgets, totalBudget, totalSpent, totalPl
             {/* Add to Task Modal */}
             {taskModal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-                    <div className="bg-white rounded-lg shadow-xl w-full max-w-md mx-4 p-6 space-y-4">
+                    <div className="bg-white rounded-xl shadow-xl w-full max-w-md mx-4 p-6 space-y-4">
                         <h3 className="text-lg font-semibold">Tambah ke Checklist</h3>
-                        <p className="text-xs text-gray-500">Dari budget: <strong>{taskModal.description}</strong> (Rp {formatRp(taskModal.amount)})</p>
+                        <p className="text-xs text-gray-600">Dari budget: <strong>{taskModal.description}</strong> (Rp {formatRp(taskModal.amount)})</p>
                         <form onSubmit={submitTask} className="space-y-3">
                             <div>
-                                <label className="block text-sm font-medium text-gray-700">Judul Task</label>
+                                <label className="block text-sm font-medium text-gray-800">Judul Task</label>
                                 <input type="text" value={taskData.title} onChange={e => setTaskData('title', e.target.value)}
                                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm" required />
                                 {taskErrors.title && <p className="mt-1 text-xs text-red-600">{taskErrors.title}</p>}
                             </div>
                             <div className="grid grid-cols-2 gap-3">
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700">Kategori</label>
+                                    <label className="block text-sm font-medium text-gray-800">Kategori</label>
                                     <select value={taskData.category} onChange={e => setTaskData('category', e.target.value)}
                                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
                                         {taskCategories.map(c => <option key={c} value={c}>{c}</option>)}
                                     </select>
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700">Prioritas</label>
+                                    <label className="block text-sm font-medium text-gray-800">Prioritas</label>
                                     <select value={taskData.priority} onChange={e => setTaskData('priority', e.target.value)}
                                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
                                         <option value="low">Low</option>
@@ -134,13 +144,13 @@ export default function BudgetsIndex({ budgets, totalBudget, totalSpent, totalPl
                                 </div>
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700">Deadline</label>
+                                <label className="block text-sm font-medium text-gray-800">Deadline</label>
                                 <input type="date" value={taskData.deadline} onChange={e => setTaskData('deadline', e.target.value)}
                                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
                             </div>
                             <div className="flex gap-3 justify-end pt-2">
                                 <button type="button" onClick={() => { setTaskModal(null); resetTask(); }}
-                                    className="rounded-md bg-gray-200 px-4 py-2 text-sm text-gray-700 hover:bg-gray-300">Batal</button>
+                                    className="rounded-md bg-white border border-gray-200 px-4 py-2 text-sm text-gray-800 hover:bg-gray-50">Batal</button>
                                 <button type="submit" disabled={taskProcessing}
                                     className="rounded-md bg-green-600 px-4 py-2 text-sm font-semibold text-white hover:bg-green-500 disabled:opacity-50">Simpan ke Checklist</button>
                             </div>
@@ -148,6 +158,15 @@ export default function BudgetsIndex({ budgets, totalBudget, totalSpent, totalPl
                     </div>
                 </div>
             )}
+
+            <ConfirmDeleteModal
+                show={deleteId !== null}
+                onClose={() => setDeleteId(null)}
+                onConfirm={handleDelete}
+                processing={deleteProcessing}
+                title="Hapus Budget"
+                message="Apakah Anda yakin ingin menghapus data budget ini?"
+            />
         </AuthenticatedLayout>
     );
 }

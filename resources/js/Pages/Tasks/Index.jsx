@@ -1,5 +1,6 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, Link, router, usePage } from '@inertiajs/react';
+import ConfirmDeleteModal from '@/Components/ConfirmDeleteModal';
+import { Head, Link, router, useForm, usePage } from '@inertiajs/react';
 import { useState } from 'react';
 import { formatDate } from '@/utils/format';
 
@@ -20,6 +21,12 @@ export default function TasksIndex({ tasks, filters }) {
         return init;
     });
     const [newSubTask, setNewSubTask] = useState({});
+
+    // Delete confirmation states
+    const [deleteTaskId, setDeleteTaskId] = useState(null);
+    const [deleteSubTaskRef, setDeleteSubTaskRef] = useState(null); // { taskId, subtaskId }
+    const { delete: destroyTask, processing: deleteTaskProcessing } = useForm();
+    const [deleteSubProcessing, setDeleteSubProcessing] = useState(false);
 
     const applyFilter = () => {
         router.get(route('tasks.index'), { search, category, status }, { preserveState: true, replace: true });
@@ -69,8 +76,10 @@ export default function TasksIndex({ tasks, filters }) {
         reloadTasks();
     };
 
-    const deleteSubTask = async (taskId, subtaskId) => {
-        if (!confirm('Hapus sub-task?')) return;
+    const confirmDeleteSubTask = async () => {
+        if (!deleteSubTaskRef) return;
+        const { taskId, subtaskId } = deleteSubTaskRef;
+        setDeleteSubProcessing(true);
         await fetch(route('tasks.subtasks.destroy', { task: taskId, subtask: subtaskId }), {
             method: 'DELETE',
             headers: {
@@ -78,7 +87,15 @@ export default function TasksIndex({ tasks, filters }) {
                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '',
             },
         });
+        setDeleteSubProcessing(false);
+        setDeleteSubTaskRef(null);
         reloadTasks();
+    };
+
+    const handleDeleteTask = () => {
+        destroyTask(route('tasks.destroy', deleteTaskId), {
+            onSuccess: () => setDeleteTaskId(null),
+        });
     };
 
     return (
@@ -86,11 +103,11 @@ export default function TasksIndex({ tasks, filters }) {
             <Head title="Checklist" />
             <div className="space-y-6">
                 <div className="flex items-center justify-between">
-                    <h2 className="text-2xl font-bold text-gray-800">Checklist</h2>
-                    <Link href={route('tasks.create')} className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500">+ Tambah Task</Link>
+                    <h2 className="text-2xl font-bold text-burgundy">Checklist</h2>
+                    <Link href={route('tasks.create')} className="rounded-md bg-rose px-4 py-2 text-sm font-semibold text-white hover:bg-rose-hover">+ Tambah Task</Link>
                 </div>
 
-                <div className="flex flex-wrap gap-3 rounded-lg bg-white p-4 shadow">
+                <div className="flex flex-wrap gap-3 rounded-xl bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100">
                     <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Cari task..." className="rounded-md border-gray-300 text-sm" />
                     <select value={category} onChange={(e) => setCategory(e.target.value)} className="rounded-md border-gray-300 text-sm">
                         <option value="">Semua Kategori</option>
@@ -100,21 +117,21 @@ export default function TasksIndex({ tasks, filters }) {
                         <option value="">Semua Status</option>
                         <option value="pending">Pending</option><option value="progress">Progress</option><option value="completed">Completed</option>
                     </select>
-                    <button onClick={applyFilter} className="rounded-md bg-gray-600 px-4 py-2 text-sm text-white hover:bg-gray-500">Filter</button>
+                    <button onClick={applyFilter} className="rounded-md bg-gray-700 px-4 py-2 text-sm text-white hover:bg-gray-800">Filter</button>
                 </div>
 
                 {flash?.success && <div className="rounded-md bg-green-50 p-4 text-sm text-green-700">{flash.success}</div>}
 
                 <div className="space-y-2">
                     {tasks.data.map((task) => (
-                        <div key={task.id} className="rounded-lg bg-white shadow overflow-hidden">
+                        <div key={task.id} className="rounded-xl bg-white shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100 overflow-hidden">
                             {/* Main task row */}
-                            <div className="flex items-center px-4 py-3 hover:bg-gray-50">
+                            <div className="flex items-center px-4 py-3 hover:bg-rose/[0.03]">
                                 <button onClick={() => toggleExpand(task.id)} className="mr-3 text-gray-400 hover:text-gray-600">
                                     {expanded[task.id] ? '▼' : '▶'}
                                 </button>
                                 <div className="flex-1">
-                                    <Link href={route('tasks.show', task.id)} className="text-sm font-medium text-indigo-600 hover:underline">{task.title}</Link>
+                                    <Link href={route('tasks.show', task.id)} className="text-sm font-medium text-rose hover:underline">{task.title}</Link>
                                     {task.children?.length > 0 && (
                                         <span className="ml-2 text-xs text-gray-400">
                                             {task.children.filter(c => c.status === 'completed').length}/{task.children.length} sub-task
@@ -124,14 +141,13 @@ export default function TasksIndex({ tasks, filters }) {
                                 <div className="flex items-center gap-3">
                                     <span className="text-xs text-gray-400">{categoryLabels[task.category]}</span>
                                     <span className="text-xs text-gray-400">{formatDate(task.deadline)}</span>
-                                    <span className={`inline-flex rounded-full px-2 py-1 text-xs font-medium ${priorityColors[task.priority]}`}>{task.priority}</span>
+                                    <span className={`inline-flex rounded-lg px-2 py-1 text-xs font-medium ${priorityColors[task.priority]}`}>{task.priority}</span>
                                     <select value={task.status} onChange={(e) => updateStatus(task.id, e.target.value)}
-                                        className={`rounded-full px-2 py-1 text-xs font-medium border-0 ${statusColors[task.status]}`}>
+                                        className={`rounded-lg px-2 py-1 text-xs font-medium border-0 ${statusColors[task.status]}`}>
                                         <option value="pending">Pending</option><option value="progress">Progress</option><option value="completed">Completed</option>
                                     </select>
-                                    <Link href={route('tasks.edit', task.id)} className="text-xs text-indigo-600 hover:underline">Edit</Link>
-                                    <Link href={route('tasks.destroy', task.id)} method="delete" as="button" className="text-xs text-red-600 hover:underline"
-                                        onClick={(e) => { if (!confirm('Hapus?')) e.preventDefault(); }}>Hapus</Link>
+                                    <Link href={route('tasks.edit', task.id)} className="text-xs text-rose hover:underline">Edit</Link>
+                                    <button onClick={() => setDeleteTaskId(task.id)} className="text-xs text-red-600 hover:underline">Hapus</button>
                                 </div>
                             </div>
 
@@ -142,11 +158,12 @@ export default function TasksIndex({ tasks, filters }) {
                                         <div key={sub.id} className="flex items-center gap-3">
                                             <input type="checkbox" checked={sub.status === 'completed'}
                                                 onChange={() => toggleSubTask(task.id, sub.id)}
-                                                className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" />
-                                            <span className={`flex-1 text-sm ${sub.status === 'completed' ? 'line-through text-gray-400' : 'text-gray-700'}`}>
+                                                className="rounded border-gray-300 text-rose focus:ring-rose" />
+                                            <span className={`flex-1 text-sm ${sub.status === 'completed' ? 'line-through text-gray-400' : 'text-gray-800'}`}>
                                                 {sub.title}
                                             </span>
-                                            <button onClick={() => deleteSubTask(task.id, sub.id)} className="text-xs text-red-400 hover:text-red-600">🗑</button>
+                                            <button onClick={() => setDeleteSubTaskRef({ taskId: task.id, subtaskId: sub.id })}
+                                                className="text-xs text-red-400 hover:text-red-600">🗑</button>
                                         </div>
                                     ))}
                                     {/* Add sub-task */}
@@ -156,7 +173,7 @@ export default function TasksIndex({ tasks, filters }) {
                                             onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addSubTask(task.id))}
                                             placeholder="+ Tambah sub-task..." className="flex-1 text-sm border-0 border-b border-gray-300 bg-transparent focus:ring-0" />
                                         <button onClick={() => addSubTask(task.id)}
-                                            className="text-xs text-indigo-600 hover:underline shrink-0">Tambah</button>
+                                            className="text-xs text-rose hover:underline shrink-0">Tambah</button>
                                     </div>
                                 </div>
                             )}
@@ -168,12 +185,32 @@ export default function TasksIndex({ tasks, filters }) {
                     <div className="flex justify-center gap-1">
                         {tasks.links.map((l, i) => (
                             <Link key={i} href={l.url || '#'}
-                                className={`px-3 py-1.5 text-sm rounded ${l.active ? 'bg-indigo-600 text-white' : l.url ? 'bg-white text-gray-600 hover:bg-gray-100' : 'text-gray-300 cursor-default'}`}
+                                className={`px-3 py-1.5 text-sm rounded ${l.active ? 'bg-rose text-white' : l.url ? 'bg-white text-gray-600 hover:bg-gray-100' : 'text-gray-300 cursor-default'}`}
                                 dangerouslySetInnerHTML={{ __html: l.label }} />
                         ))}
                     </div>
                 )}
             </div>
+
+            {/* Delete Task Modal */}
+            <ConfirmDeleteModal
+                show={deleteTaskId !== null}
+                onClose={() => setDeleteTaskId(null)}
+                onConfirm={handleDeleteTask}
+                processing={deleteTaskProcessing}
+                title="Hapus Task"
+                message="Apakah Anda yakin ingin menghapus task ini? Sub-task juga akan ikut terhapus."
+            />
+
+            {/* Delete Sub-task Modal */}
+            <ConfirmDeleteModal
+                show={deleteSubTaskRef !== null}
+                onClose={() => setDeleteSubTaskRef(null)}
+                onConfirm={confirmDeleteSubTask}
+                processing={deleteSubProcessing}
+                title="Hapus Sub-Task"
+                message="Apakah Anda yakin ingin menghapus sub-task ini?"
+            />
         </AuthenticatedLayout>
     );
 }
